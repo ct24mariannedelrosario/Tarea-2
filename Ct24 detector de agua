@@ -1,0 +1,22 @@
+
+#define PIN_SENSOR 34
+#define PIN_LED 2
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(PIN_SENSOR, INPUT);
+  pinMode(PIN_LED, OUTPUT);
+  
+  Serial.println("Sensor de agua para dias patrios");
+}
+
+void loop() {
+  int nivel = analogRead(PIN_SENSOR);
+  
+  Serial.print("Nivel de agua: ");
+  Serial.println(nivel);
+  
+  digitalWrite(PIN_LED, nivel > 100);
+  
+  delay(500);
+}
