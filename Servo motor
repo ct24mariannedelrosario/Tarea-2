@@ -1,0 +1,53 @@
+#include <ESP32Servo.h>
+
+Servo miServo;
+
+const int pinTrigger = 5;    
+const int pinEcho = 18;      
+const int servoPin = 2;     
+
+long duracion;
+
+void setup() {
+  Serial.begin(115200);
+  
+  pinMode(pinTrigger, OUTPUT);
+  pinMode(pinEcho, INPUT);
+  
+  ESP32PWM::allocateTimer(0);
+  ESP32PWM::allocateTimer(1);
+  ESP32PWM::allocateTimer(2);
+  ESP32PWM::allocateTimer(3);
+  
+  miServo.setPeriodHertz(50);    
+  miServo.attach(servoPin, 500, 2400);  
+  
+  
+  miServo.write(0);
+  
+  Serial.println("Listo para desfilar!");
+}
+
+void loop() {
+  digitalWrite(pinTrigger, LOW);
+  delayMicroseconds(2);
+  digitalWrite(pinTrigger, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(pinTrigger, LOW);
+  
+  duracion = pulseIn(pinEcho, HIGH);
+  
+  int angulo = map(duracion, 0, 90, 180, 0);
+  angulo = constrain(angulo, 0, 180);
+ 
+  miServo.write(angulo);
+  
+  Serial.print("Duración echo: ");
+  Serial.print(duracion);
+  Serial.print("Moviendo servo a: ");
+  Serial.print(angulo);
+  Serial.println("grados");
+  
+  // Pequeña pausa entre lecturas
+  delay(500);
+}
